@@ -16,7 +16,7 @@ jobs:
 
         os: [ubuntu-latest, windows-latest, macos-latest]
 
-        python-version: [3.9, 3.10, 3.11]
+        python-version: [ 3.9, 3.10, 3.11 ]
 
         # Remove unsupported combinations
         exclude:
@@ -43,6 +43,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Print Matrix Values
+        run: |
+            echo "OS: ${{ matrix.os }}"
+            echo "Python: ${{ matrix.python-version }}"
+            
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
