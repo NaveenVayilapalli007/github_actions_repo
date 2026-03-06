@@ -12,10 +12,13 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Print Greeting
         run: echo "Hello from GitHub Actions"
+
+      - name: Printing GITHUB_WORKSPACE VARIABLE
+        run: echo "$GITHUB_WORKSPACE"
 
       - name: Show Current Directory
         run: pwd
