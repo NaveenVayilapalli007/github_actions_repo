@@ -1,0 +1,10 @@
+name: caller
+
+on: workflow_dispatch
+
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/reusable-workflow.yml
+    with:
+      username: ${{github.actor}}
+      age: 30

@@ -1,0 +1,18 @@
+name: reusable
+
+on:
+  workflow_call:
+    inputs:
+      username:
+        type: string
+        required: true
+      age:
+        type: number
+        required: false
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello ${{ inputs.username }}"
+      - run: echo "Your age ${{ inputs.age }}"
