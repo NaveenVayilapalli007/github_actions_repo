@@ -1,0 +1,27 @@
+name: Basic Push Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  hello-job:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v1
+
+      - name: Print Greeting
+        run: echo "Hello from GitHub Actions"
+
+      - name: Show Current Directory
+        run: pwd
+
+      - name: List Files
+        run: ls -la
+
+      - name: Print Date
+        run: date
