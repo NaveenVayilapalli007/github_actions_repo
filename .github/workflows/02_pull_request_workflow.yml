@@ -23,6 +23,39 @@ jobs:
           echo "Source Branch: ${{ github.head_ref }}"
           echo "Target Branch: ${{ github.base_ref }}"
 
+      - name: Dump GitHub Context
+        run: echo '${{ toJson(github) }}'
+
+      - name: Dump ENV Context
+        run: echo '${{ toJson(env) }}'
+
+      - name: Dump Job Context
+        run: echo '${{ toJson(job) }}'
+
+      - name: Dump Steps Context
+        run: echo '${{ toJson(steps) }}'
+
+      - name: Dump Runner Context
+        run: echo '${{ toJson(runner) }}'
+
+      - name: Dump Strategy Context
+        run: echo '${{ toJson(strategy) }}'
+
+      - name: Dump Matrix Context
+        run: echo '${{ toJson(matrix) }}'
+
+      - name: Dump Needs Context
+        run: echo '${{ toJson(needs) }}'
+
+      - name: Dump Secrets Context
+        run: echo '${{ toJson(secrets) }}'
+
+      - name: Dump Repository Variables Context
+        run: echo '${{ toJson(vars) }}'
+
+      - name: Dump Inputs Context
+        run: echo '${{ toJson(inputs) }}'
+
       - name: List Files
         run: ls -la
 
