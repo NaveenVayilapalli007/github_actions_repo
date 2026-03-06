@@ -16,24 +16,24 @@ jobs:
 
         os: [ubuntu-latest, windows-latest, macos-latest]
 
-        python-version: [ 3.9, 3.10, 3.11 ]
+        python-version: [ "3.9", "3.10", "3.11" ]
 
         # Remove unsupported combinations
         exclude:
           - os: windows-latest
-            python-version: 3.9
+            python-version: "3.9"
 
           - os: macos-latest
-            python-version: 3.10
+            python-version: "3.10"
 
         # Add special combinations
         include:
           - os: ubuntu-latest
-            python-version: 3.12
+            python-version: "3.12"
             experimental: true
 
           - os: windows-latest
-            python-version: 3.11
+            python-version: "3.11"
             special-run: true
 
     runs-on: ${{ matrix.os }}
@@ -47,7 +47,7 @@ jobs:
         run: |
             echo "OS: ${{ matrix.os }}"
             echo "Python: ${{ matrix.python-version }}"
-            
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
