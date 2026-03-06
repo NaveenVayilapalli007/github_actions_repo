@@ -1,0 +1,33 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print PR Information
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "PR Author: ${{ github.actor }}"
+          echo "Source Branch: ${{ github.head_ref }}"
+          echo "Target Branch: ${{ github.base_ref }}"
+
+      - name: List Files
+        run: ls -la
+
+      - name: Simulate Build
+        run: echo "Running build checks..."
+
+      - name: Simulate Tests
+        run: echo "Running tests..."
