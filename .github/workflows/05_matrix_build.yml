@@ -1,0 +1,54 @@
+name: Matrix Build Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+
+  build-test:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+        python-version: [3.7, 3.8, 3.9, 3.10, 3.11]
+
+        include:
+          - os: ubuntu-latest
+            python-version: 3.12
+
+        exclude:
+          - os: windows-latest
+            python-version: 3.9
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Print Matrix Information
+        run: |
+          echo "Operating System: ${{ matrix.os }}"
+          echo "Python Version: ${{ matrix.python-version }}"
+
+      - name: Show Python Version
+        run: python --version
+
+      - name: Simulate Build
+        run: echo "Running build on ${{ matrix.os }} with Python ${{ matrix.python-version }}"
+
+      - name: List Files
+        run: ls -la
