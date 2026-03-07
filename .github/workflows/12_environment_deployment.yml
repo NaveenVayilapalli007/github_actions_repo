@@ -1,0 +1,55 @@
+name: Environment Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment Environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ inputs.environment }}
+
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      - name: Print Deployment Information
+        run: |
+          echo "Deployment triggered"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Commit SHA: ${{ github.sha }}"
+
+
+      - name: Simulate Build Step
+        run: |
+          echo "Building application..."
+
+
+      - name: Simulate Deployment
+        run: |
+          echo "Deploying application to ${{ inputs.environment }} environment"
+
+
+      - name: Deployment Status
+        run: |
+          echo "Deployment completed successfully"
