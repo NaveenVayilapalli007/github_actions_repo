@@ -2,19 +2,17 @@ name: Call Reusable Workflow
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
   workflow_dispatch:
 
 jobs:
-
   call-build:
 
     uses: ./.github/workflows/08_reusable_workflow.yml
 
     with:
-      message: "Hello from main workflow"
+      message: "Hello from caller workflow"
 
     secrets:
       MY_SECRET: ${{ secrets.MY_SECRET }}

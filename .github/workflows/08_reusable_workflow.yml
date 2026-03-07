@@ -13,15 +13,17 @@ on:
         required: false
 
 jobs:
-
   reusable-job:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Print message
         run: echo "${{ inputs.message }}"
 
       - name: Check secret
-        if: ${{ secrets.MY_SECRET != '' }}
-        run: echo "Secret exists"
+        run: |
+          if [ -n "${{ secrets.MY_SECRET }}" ]; then
+            echo "Secret exists"
+          else
+            echo "Secret not provided"
+          fi
