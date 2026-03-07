@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 1.5"
 
   backend "s3" {
-    bucket         = "terraform-state-naveen-1234567890"
-    key            = "github-actions/terraform.tfstate"
-    region         = "us-east-1"
+    bucket       = "terraform-state-naveen-1234567890"
+    key          = "github-actions/terraform.tfstate"
+    region       = "us-east-1"
     use_lockfile = "terraform-lock-table"
   }
 
