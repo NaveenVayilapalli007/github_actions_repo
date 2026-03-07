@@ -1,0 +1,21 @@
+name: Call Reusable Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+
+  call-build:
+
+    uses: ./.github/workflows/08_reusable_workflow.yml
+
+    with:
+      python-version: "3.11"
+      run-tests: true
+
+    secrets:
+      MY_SECRET: ${{ secrets.MY_SECRET }}
