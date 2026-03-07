@@ -16,4 +16,4 @@ jobs:
       message: "Hello from caller workflow"
 
     secrets:
-      MY_SECRET: ${{ secrets.MY_SECRET }}
+      MY_SECRET: ${{ secrets.AWS_SECRET_KEY }}

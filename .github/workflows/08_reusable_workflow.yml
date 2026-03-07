@@ -22,7 +22,7 @@ jobs:
 
       - name: Check secret
         run: |
-          if [ -n "${{ secrets.MY_SECRET }}" ]; then
+          if [ -n "${{ secrets.AWS_SECRET_KEY }}" ]; then
             echo "Secret exists"
           else
             echo "Secret not provided"
