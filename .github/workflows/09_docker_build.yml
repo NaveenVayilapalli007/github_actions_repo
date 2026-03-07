@@ -1,0 +1,67 @@
+name: Docker Build Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+
+  docker-build:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      - name: Set Image Metadata
+        id: meta
+        run: |
+          IMAGE_NAME=${{ github.repository }}
+          IMAGE_TAG=${{ github.sha }}
+          echo "image_name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+
+      - name: Print Image Details
+        run: |
+          echo "Image Name: ${{ steps.meta.outputs.image_name }}"
+          echo "Image Tag: ${{ steps.meta.outputs.image_tag }}"
+
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.image_tag }} \
+            .
+
+
+      - name: List Docker Images
+        run: docker images
+
+
+      - name: Save Docker Image as Artifact
+        run: |
+          docker save \
+          ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.image_tag }} \
+          -o docker-image.tar
+
+
+      - name: Upload Docker Image Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: docker-image.tar
+          retention-days: 3
