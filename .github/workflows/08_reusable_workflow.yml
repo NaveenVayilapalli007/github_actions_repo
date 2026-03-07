@@ -9,7 +9,7 @@ on:
         type: string
 
     secrets:
-      MY_SECRET:
+      AWS_SECRET_KEY:
         required: false
 
 jobs:
