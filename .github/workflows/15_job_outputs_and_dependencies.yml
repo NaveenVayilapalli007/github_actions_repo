@@ -1,0 +1,73 @@
+name: Job Outputs and Dependencies
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      image_tag: ${{ steps.generate.outputs.tag }}
+      build_time: ${{ steps.generate.outputs.build_time }}
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      - name: Generate Build Metadata
+        id: generate
+        run: |
+          TAG=build-${GITHUB_RUN_NUMBER}
+          TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "build_time=$TIME" >> $GITHUB_OUTPUT
+
+          echo "Generated tag: $TAG"
+          echo "Build time: $TIME"
+
+
+      - name: Simulate Build
+        run: |
+          echo "Building application..."
+          echo "Image tag: ${{ steps.generate.outputs.tag }}"
+
+
+  test:
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+
+      - name: Print Build Metadata
+        run: |
+          echo "Received Image Tag: ${{ needs.build.outputs.image_tag }}"
+          echo "Build Time: ${{ needs.build.outputs.build_time }}"
+
+      - name: Simulate Tests
+        run: |
+          echo "Running tests against build ${{ needs.build.outputs.image_tag }}"
+
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    needs: [build, test]
+
+    steps:
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying build ${{ needs.build.outputs.image_tag }}"
+          echo "Build timestamp: ${{ needs.build.outputs.build_time }}"
+          echo "Deployment started by ${{ github.actor }}"
