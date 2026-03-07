@@ -2,8 +2,7 @@ name: Call Reusable Workflow
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
   workflow_dispatch:
 
@@ -16,4 +15,4 @@ jobs:
       message: "Hello from caller workflow"
 
     secrets:
-      MY_SECRET: ${{ secrets.AWS_SECRET_KEY }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
