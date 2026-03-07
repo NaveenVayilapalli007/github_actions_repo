@@ -1,0 +1,83 @@
+name: Monorepo Microservices Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  detect-changes:
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.services.outputs.matrix }}
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Detect Changed Services
+        id: services
+        run: |
+
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^services/' | cut -d/ -f2 | sort -u)
+
+          if [ -z "$CHANGED" ]; then
+            echo "No service changes detected"
+            MATRIX='{"service":["auth-service","payment-service","order-service"]}'
+          else
+            SERVICES=$(printf '"%s",' $CHANGED | sed 's/,$//')
+            MATRIX="{\"service\":[${SERVICES}]}"
+          fi
+
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+          echo "Detected services: $MATRIX"
+
+
+
+  build-services:
+
+    runs-on: ubuntu-latest
+
+    needs: detect-changes
+
+    strategy:
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print Service
+        run: |
+          echo "Building service: ${{ matrix.service }}"
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ matrix.service }} ./services/${{ matrix.service }}
+
+      - name: List Docker Images
+        run: docker images
+
+
+
+  test-services:
+
+    runs-on: ubuntu-latest
+
+    needs: build-services
+
+    strategy:
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+
+    steps:
+
+      - name: Run Tests
+        run: |
+          echo "Running tests for ${{ matrix.service }}"
