@@ -21,8 +21,10 @@ jobs:
         run: echo "${{ inputs.message }}"
 
       - name: Check secret
+        env:
+            AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         run: |
-            if [ -n "${{ secrets.AWS_SECRET_KEY }}" ]; then
+            if [ -n "$AWS_SECRET_KEY" ]; then
             echo "Secret exists"
             else
             echo "Secret not provided"
