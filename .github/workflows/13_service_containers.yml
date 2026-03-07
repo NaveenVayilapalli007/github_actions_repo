@@ -1,0 +1,93 @@
+name: Service Containers Integration Test
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+
+  integration-test:
+
+    runs-on: ubuntu-latest
+
+    services:
+
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: testdb
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpassword
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      - name: Install Database Clients
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client mysql-client
+
+
+      - name: Wait for Services
+        run: |
+          sleep 15
+
+
+      - name: Test PostgreSQL Connection
+        run: |
+          PGPASSWORD=testpassword psql -h localhost -U testuser -d testdb -c "SELECT version();"
+
+
+      - name: Test MySQL Connection
+        run: |
+          mysql -h 127.0.0.1 -u testuser -ptestpassword -e "SHOW DATABASES;"
+
+
+      - name: Test MongoDB Connection
+        run: |
+          mongosh "mongodb://localhost:27017" --eval "db.runCommand({ ping: 1 })"
+
+
+      - name: Simulate Integration Tests
+        run: |
+          echo "Running application integration tests against databases"
