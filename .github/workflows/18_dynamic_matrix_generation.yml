@@ -20,10 +20,7 @@ jobs:
       - name: Generate Dynamic Matrix
         id: set-matrix
         run: |
-          MATRIX='{
-            "service": ["auth-service", "payment-service", "order-service"]
-          }'
-
+          MATRIX='{"service":["auth-service","payment-service","order-service"]}'
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
       - name: Print Generated Matrix
