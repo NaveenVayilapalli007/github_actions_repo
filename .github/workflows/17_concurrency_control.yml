@@ -1,0 +1,56 @@
+name: Concurrency Control Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  workflow_dispatch:
+
+concurrency:
+  group: deployment-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Step
+        run: |
+          echo "Building application..."
+          sleep 10
+
+
+  test:
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+
+      - name: Run Tests
+        run: |
+          echo "Running tests..."
+          sleep 10
+
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying application to environment"
+          echo "Branch: ${{ github.ref_name }}"
+          sleep 20
