@@ -49,12 +49,6 @@ jobs:
         image: mongo:7
         ports:
           - 27017:27017
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
 
     steps:
 
@@ -66,11 +60,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client mysql-client
+          sudo apt-get install -y mongodb-mongosh
 
 
       - name: Wait for Services
         run: |
-          sleep 15
+          echo "Waiting for databases to start..."
+          sleep 20
 
 
       - name: Test PostgreSQL Connection
