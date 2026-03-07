@@ -1,17 +1,12 @@
-name: Reusable Build Workflow
+name: Reusable Workflow
 
 on:
   workflow_call:
-
     inputs:
-      python-version:
+      message:
+        description: "Message to print"
         required: true
         type: string
-
-      run-tests:
-        required: false
-        type: boolean
-        default: true
 
     secrets:
       MY_SECRET:
@@ -19,35 +14,14 @@ on:
 
 jobs:
 
-  build:
-
+  reusable-job:
     runs-on: ubuntu-latest
 
     steps:
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Print message
+        run: echo "${{ inputs.message }}"
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.python-version }}
-
-      - name: Print Inputs
-        run: |
-          echo "Python Version: ${{ inputs.python-version }}"
-          echo "Run Tests: ${{ inputs.run-tests }}"
-
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt || echo "No requirements.txt found"
-
-      - name: Run Tests
-        if: ${{ inputs.run-tests }}
-        run: |
-          echo "Running tests..."
-
-      - name: Print Secret
+      - name: Check secret
         if: ${{ secrets.MY_SECRET != '' }}
-        run: |
-          echo "Secret received successfully"
+        run: echo "Secret exists"
