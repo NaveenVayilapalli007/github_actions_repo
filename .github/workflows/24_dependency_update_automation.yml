@@ -1,0 +1,55 @@
+name: Dependency Update Automation
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  update-dependencies:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+
+      - name: Install Dependency Tools
+        run: |
+          pip install pip-tools
+
+
+      - name: Update Dependencies
+        run: |
+          pip install -U pip
+          pip list --outdated || true
+
+
+      - name: Commit Updated Dependencies
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          git add .
+          git commit -m "Automated dependency update" || echo "No changes to commit"
+
+
+      - name: Create Pull Request
+        uses: NaveenVayilapalli007/create-pull-request@v6
+        with:
+          title: "Automated Dependency Updates"
+          body: |
+            This PR updates outdated dependencies automatically.
+
+          branch: dependency-updates
